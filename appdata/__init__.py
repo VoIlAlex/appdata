@@ -56,6 +56,15 @@ class AppDataPaths:
         elif verbose:
             logger.warning('Main config file already exists.')
 
+    def require_setup(self) -> bool:
+        if not os.path.exists(self.app_data_path):
+            return True
+        if not os.path.exists(self.logs_folder_path):
+            return True
+        if not os.path.exists(self.main_config_path):
+            return True
+        return False
+
     def join(self, *paths) -> str:
         """Join paths with path of the app data folder.
 

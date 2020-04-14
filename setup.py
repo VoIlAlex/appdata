@@ -17,7 +17,7 @@ setup(
 	packages=find_packages('.'),
 	# Start with a small number and increase it with 
 	# every change you make https://semver.org 
-	version='1.1.0',
+	version='1.2.0',
 	# Chose a license from here: https: // 
 	# help.github.com / articles / licensing - a - 
 	# repository. For example: MIT 
@@ -34,7 +34,7 @@ setup(
 	# Either the link to your github or to your website 
 	url='https://github.com/VoIlAlex/appdata',
 	# Link from which the project can be downloaded 
-	download_url='https://github.com/VoIlAlex/appdata/archive/v1.1.0.tar.gz',
+	download_url='https://github.com/VoIlAlex/appdata/archive/v1.2.0.tar.gz',
 	# List of keywords 
 	keywords=[
 		'utils', 'filesystem', 'paths', 'resources'
