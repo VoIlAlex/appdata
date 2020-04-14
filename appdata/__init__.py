@@ -5,21 +5,30 @@ from loguru import logger
 
 
 class AppDataPaths:
-    def __init__(self, app_name: str, config_ext: str = 'ini'):
+    def __init__(self,
+                 app_name: str, 
+                 config_ext: str = 'ini', 
+                 root_appdata: str = None, 
+                 with_dot: bool = True):
+        self._prefix = '.' if with_dot else ''
         self.app_name = app_name
         self.app_data_path = None
         if sys.platform == 'linux':
-            self.app_data_path = os.path.join(
-                os.getenv('HOME'), f'.{app_name}')
+            root_folder = os.getenv('HOME')
         else:
-            self.app_data_path = os.path.join(
-                os.getenv('HOMEPATH'), f'.{app_name}')
+            root_folder = os.getenv('HOMEPATH')
+        if root_appdata:
+            root_folder = os.path.join(root_folder, root_appdata)
+        self.app_data_path = os.path.join(
+            root_folder,
+            f'{self._prefix}{self.app_name}')
         self.logs_folder_path = os.path.join(self.app_data_path, 'logs')
-        self.main_config_path = os.path.join(self.app_data_path, f'{app_name}.config')
+        self.main_config_path = os.path.join(
+            self.app_data_path, f'{app_name}.{config_ext}')
 
     def setup(self, verbose: bool = False):
         """Setup app data folder. Create all the missing folders and files.
-        
+
         Keyword Arguments:
             verbose {bool} -- whether to log the process of setting up (default: {False})
         """
@@ -39,7 +48,6 @@ class AppDataPaths:
         elif verbose:
             logger.warning('Logs folder already exists.')
 
-
         # Create config file
         if verbose:
             logger.info('Creating the main config file...')
@@ -50,7 +58,7 @@ class AppDataPaths:
 
     def join(self, *paths) -> str:
         """Join paths with path of the app data folder.
-        
+
         Returns:
             str -- joint paths.
         """
