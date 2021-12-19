@@ -8,7 +8,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/b909411d678ef3500d92/maintainability)](https://codeclimate.com/github/VoIlAlex/appdata/maintainability)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
-[![PyPi license](https://badgen.net/pypi/license/appdata/)](https://pypi.com/project/appdata/)
+[![License](https://img.shields.io/github/license/VoIlAlex/appdata)](https://github.com/VoIlAlex/appdata/blob/master/LICENSE.md)
 
 
 [![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
