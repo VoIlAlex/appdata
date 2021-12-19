@@ -1,6 +1,19 @@
 # appdata | Application Data Management
 
 [![Coverage Status](https://coveralls.io/repos/github/VoIlAlex/appdata/badge.svg?branch=master&)](https://coveralls.io/github/VoIlAlex/appdata?branch=master)
+[![PyPI release](https://img.shields.io/pypi/v/appdata)](https://pypi.org/project/appdata/)
+![example workflow](https://github.com/VoIlAlex/appdata/actions/workflows/publish-to-pypi.yml/badge.svg)
+
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/b909411d678ef3500d92/maintainability)](https://codeclimate.com/github/VoIlAlex/appdata/maintainability)
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![PyPi license](https://badgen.net/pypi/license/appdata/)](https://pypi.com/project/appdata/)
+
+
+[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
+[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)
+[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
+
 ## Installation
 
 ```bash
