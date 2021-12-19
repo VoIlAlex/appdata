@@ -9,6 +9,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/b909411d678ef3500d92/maintainability)](https://codeclimate.com/github/VoIlAlex/appdata/maintainability)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![License](https://img.shields.io/github/license/VoIlAlex/appdata)](https://github.com/VoIlAlex/appdata/blob/master/LICENSE.md)
+[![Downloads](https://static.pepy.tech/personalized-badge/appdata?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)](https://pepy.tech/project/appdata)
 
 
 [![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
