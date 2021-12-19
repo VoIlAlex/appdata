@@ -1,4 +1,5 @@
 import os
+import shutil
 from appdata import AppDataPaths
 from pathlib import Path
 
@@ -96,6 +97,35 @@ class TestConfigPaths:
             'some_config.some_ext'
         )
 
+    def test_config_path_7(self):
+        app_paths = AppDataPaths(
+            name='some_app',
+            default_confing_ext=None
+        )
+        config_path = app_paths.get_config_path(
+            name='',
+            ext=''
+        )
+        assert config_path == os.path.join(
+            Path.home(),
+            '.some_app',
+            'config'
+        )
+
+    def test_config_path_8(self):
+        app_paths = AppDataPaths(
+            name='some_app',
+            default_confing_ext=None
+        )
+        config_path = app_paths.get_config_path(
+            name='',
+            ext='.conf'
+        )
+        assert config_path == os.path.join(
+            Path.home(),
+            '.some_app',
+            '.conf'
+        )
 
 class TestLogPaths:
     def test_logs_path_1(self):
@@ -139,6 +169,16 @@ class TestLogPaths:
             'something.log'
         )
 
+    def test_log_file_path_6(self):
+        app_paths = AppDataPaths()
+        app_paths.name = ''
+        assert app_paths.get_log_file_path() == os.path.join(
+            Path.home(),
+            '.appdata',
+            'logs',
+            'app.log'
+        )
+
 
 class TestPathsUtils:
     def test_check_for_exceptions_1(self):
@@ -166,6 +206,41 @@ class TestPathsUtils:
             return
         assert False
 
+    def test_check_for_exceptions_4(self):
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.setup()
+        assert app_paths.check_for_exceptions(raise_exceptions=False)
+        app_paths.clear(everything=True)
+
+    def test_check_for_exceptions_5(self):
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.setup()
+        os.remove(app_paths.config_path)
+        assert not app_paths.check_for_exceptions(raise_exceptions=False)
+        app_paths.clear(everything=True)
+
+    def test_check_for_exceptions_6(self):
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.setup()
+        os.remove(app_paths.log_file_path)
+        assert not app_paths.check_for_exceptions(raise_exceptions=False)
+        app_paths.clear(everything=True)
+
+    def test_check_for_exceptions_7(self):
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.setup()
+        shutil.rmtree(app_paths.logs_path)
+        assert not app_paths.check_for_exceptions(raise_exceptions=False)
+        app_paths.clear(everything=True)
+
     def test_setup_1(self):
         app_paths = AppDataPaths(
             home_folder_path=os.getcwd()
@@ -176,5 +251,35 @@ class TestPathsUtils:
         assert app_paths.require_setup is False
         app_paths.clear(everything=True)
 
+    def test_clear_1(self):
+        """
+        Simple clear clears only default generated files.
+        But app data folder and other content stays in place.
+        """
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.clear(everything=True)
+        assert not os.path.exists(app_paths.app_data_path)
+        app_paths.setup()
+        assert os.path.exists(app_paths.app_data_path)
+        assert os.path.exists(app_paths.logs_path)
+        assert os.path.exists(app_paths.config_path)
+        assert os.path.exists(app_paths.log_file_path)
+        app_paths.clear()
+        assert os.path.exists(app_paths.app_data_path)
+        assert not os.path.exists(app_paths.logs_path)
+        assert not os.path.exists(app_paths.config_path)
+        assert not os.path.exists(app_paths.log_file_path)
+        app_paths.clear(everything=True)
 
-
+    def test_clear_2(self):
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.clear(everything=True)
+        assert not os.path.exists(app_paths.app_data_path)
+        app_paths.setup()
+        assert os.path.exists(app_paths.app_data_path)
+        app_paths.clear(everything=True)
+        assert not os.path.exists(app_paths.app_data_path)

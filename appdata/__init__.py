@@ -24,7 +24,7 @@ class AppDataPaths:
         :param name: name of the project. Uses cwd name as default.
         """
         self.name = name if name else os.path.split(os.getcwd())[1]
-        self.default_confing_ext = prepare_ext(default_confing_ext)
+        self.default_confing_ext = default_confing_ext
         self.home_folder_path = home_folder_path or get_home_folder()
         self.logs_folder_name = logs_folder_name
 
@@ -37,7 +37,8 @@ class AppDataPaths:
         :param name: name of the application. Uses app name as default.
         :return: path to the config.
         """
-        ext = ext or self.default_confing_ext or self.DEFAULT_EXT
+        ext = ext if ext is not None else self.default_confing_ext \
+            if self.default_confing_ext is not None else self.DEFAULT_EXT
 
         # Not empty extension should start with . (dot)
         ext = prepare_ext(ext)
@@ -48,7 +49,7 @@ class AppDataPaths:
             if len(ext) != 0:
                 full_name = ext
             else:
-                full_name = 'default' + ext
+                full_name = 'config'
         else:
             full_name = name + ext
 
@@ -114,7 +115,7 @@ class AppDataPaths:
 
             logs_path = self.logs_path
             if os.path.exists(logs_path):
-                os.remove(logs_path)
+                shutil.rmtree(logs_path)
 
     @property
     def require_setup(self) -> bool:
@@ -125,10 +126,16 @@ class AppDataPaths:
 
     @property
     def app_data_path(self):
-        if sys.platform == 'linux':
-            app_data_folder_name = f'.{self.name}'
+        if self.name is None or self.name == '':
+            name = self.default_name
         else:
-            app_data_folder_name = self.name
+            name = self.name
+
+        if sys.platform == 'linux':
+            app_data_folder_name = f'.{name}'
+        else:
+            app_data_folder_name = name
+
         return os.path.join(self.home_folder_path, app_data_folder_name)
 
     @property
@@ -150,3 +157,6 @@ class AppDataPaths:
     def log_file_path(self):
         return self.get_log_file_path()
 
+    @property
+    def default_name(self):
+        return os.path.split(os.getcwd())[1]
