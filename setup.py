@@ -41,7 +41,9 @@ setup(
 	],
 	# List of packages to install with this one 
 	install_requires=[
-		'loguru==0.4.1'
+		'loguru==0.4.1',
+		'pytest==6.2.5',
+		'coveralls==3.3.1',
 	],
 	# https://pypi.org/classifiers/ 
 	classifiers=[
