@@ -1,74 +1,152 @@
 import configparser
 import os
+import shutil
 import sys
+from functools import cache
+
 from loguru import logger
+
+from appdata.utils import get_home_folder, prepare_ext
 
 
 class AppDataPaths:
-    def __init__(self,
-                 app_name: str, 
-                 config_ext: str = 'ini', 
-                 root_appdata: str = None, 
-                 with_dot: bool = True):
-        self._prefix = '.' if with_dot else ''
-        self.app_name = app_name
-        self.app_data_path = None
-        if sys.platform == 'linux':
-            root_folder = os.getenv('HOME')
+    DEFAULT_EXT = '.ini'
+    DEFAULT_LOG_FILE_NAME = 'app'
+
+    def __init__(
+            self,
+            name=None,
+            default_confing_ext=None,
+            logs_folder_name='logs',
+            home_folder_path=None,
+    ):
+        """
+        :param name: name of the project. Uses cwd name as default.
+        """
+        self.name = name if name else os.path.split(os.getcwd())[1]
+        self.default_confing_ext = prepare_ext(default_confing_ext)
+        self.home_folder_path = home_folder_path or get_home_folder()
+        self.logs_folder_name = logs_folder_name
+
+        assert self.name
+        assert self.home_folder_path
+
+    def get_config_path(self, name=None, ext=None, create=False):
+        """
+        Allows to get app config path.
+        :param name: name of the application. Uses app name as default.
+        :return: path to the config.
+        """
+        ext = ext or self.default_confing_ext or self.DEFAULT_EXT
+
+        # Not empty extension should start with . (dot)
+        ext = prepare_ext(ext)
+        name = name if name is not None else 'default'
+
+        # Full name
+        if len(name) == 0:
+            if len(ext) != 0:
+                full_name = ext
+            else:
+                full_name = 'default' + ext
         else:
-            root_folder = os.getenv('HOMEPATH')
-        if root_appdata:
-            root_folder = os.path.join(root_folder, root_appdata)
-        self.app_data_path = os.path.join(
-            root_folder,
-            f'{self._prefix}{self.app_name}')
-        self.logs_folder_path = os.path.join(self.app_data_path, 'logs')
-        self.main_config_path = os.path.join(
-            self.app_data_path, f'{app_name}.{config_ext}')
+            full_name = name + ext
 
-    def setup(self, verbose: bool = False):
-        """Setup app data folder. Create all the missing folders and files.
+        path = os.path.join(self.app_data_path, full_name)
+        return path
 
-        Keyword Arguments:
-            verbose {bool} -- whether to log the process of setting up (default: {False})
-        """
-        # Create app data path
-        if verbose:
-            logger.info('Creating the data folder...')
-        if not os.path.exists(self.app_data_path):
-            os.makedirs(self.app_data_path)
-        elif verbose:
-            logger.warning('Application data folder already exists.')
+    def get_log_file_path(self, name=None, create=False):
+        if name:
+            name = name
+        elif self.name:
+            name = self.name
+        else:
+            name = self.DEFAULT_LOG_FILE_NAME
+        path = os.path.join(self.logs_path, name + '.log')
+        return path
 
-        # Create logs folder
-        if verbose:
-            logger.info('Creating the logs folder...')
-        if not os.path.exists(self.logs_folder_path):
-            os.makedirs(self.logs_folder_path)
-        elif verbose:
-            logger.warning('Logs folder already exists.')
+    def check_for_exceptions(self, raise_exceptions=False):
+        try:
+            if not os.path.exists(self.app_data_path):
+                raise RuntimeError('App data folder should exist. Run setup(...) to initialize the required files.')
+            if not os.path.exists(self.config_path):
+                raise RuntimeError('Config file should exist. Run setup(...) to initialize the required files.')
+            if not os.path.exists(self.logs_path):
+                raise RuntimeError('Logs folder should exist. Run setup(...) to initialize the required files.')
+            if not os.path.exists(self.log_file_path):
+                raise RuntimeError('Default log file should exist. Run setup(...) to initialize the required files.')
+        except Exception as e:
+            if raise_exceptions:
+                raise
+            return False
+        return True
 
-        # Create config file
-        if verbose:
-            logger.info('Creating the main config file...')
-        if not os.path.exists(self.main_config_path):
-            open(self.main_config_path, 'w+').close()
-        elif verbose:
-            logger.warning('Main config file already exists.')
+    def setup(self):
+        app_data_path = self.app_data_path
+        if not os.path.exists(app_data_path):
+            os.makedirs(app_data_path)
 
+        config_path = self.config_path
+        if not os.path.exists(config_path):
+            with open(config_path, 'w+'):
+                pass
+
+        logs_path = self.logs_path
+        if not os.path.exists(logs_path):
+            os.makedirs(logs_path)
+
+        log_file_path = self.log_file_path
+        if not os.path.exists(log_file_path):
+            with open(log_file_path, 'w+'):
+                pass
+
+    def clear(self, everything=False):
+        if everything:
+            app_data_path = self.app_data_path
+            if os.path.exists(app_data_path):
+                shutil.rmtree(app_data_path)
+        else:
+            # Here all the config files should
+            # be deleted by one
+            config_path = self.config_path
+            if os.path.exists(config_path):
+                os.remove(self.config_path)
+
+            logs_path = self.logs_path
+            if os.path.exists(logs_path):
+                os.remove(logs_path)
+
+    @property
     def require_setup(self) -> bool:
-        if not os.path.exists(self.app_data_path):
-            return True
-        if not os.path.exists(self.logs_folder_path):
-            return True
-        if not os.path.exists(self.main_config_path):
-            return True
-        return False
+        return not os.path.exists(self.app_data_path) \
+                or not os.path.exists(self.config_path) \
+                or not os.path.exists(self.logs_path) \
+                or not os.path.exists(self.log_file_path)
 
-    def join(self, *paths) -> str:
-        """Join paths with path of the app data folder.
+    @property
+    def app_data_path(self):
+        if sys.platform == 'linux':
+            app_data_folder_name = f'.{self.name}'
+        else:
+            app_data_folder_name = self.name
+        return os.path.join(self.home_folder_path, app_data_folder_name)
 
-        Returns:
-            str -- joint paths.
+    @property
+    def logs_path(self):
+        if self.logs_folder_name:
+            return os.path.join(self.app_data_path, self.logs_folder_name)
+        else:
+            return self.app_data_path
+
+    @property
+    def config_path(self):
         """
-        return os.path.join(self.app_data_path, *paths)
+        Allows to get default app config path.
+        :return: path to the default config.
+        """
+        return self.get_config_path()
+
+    @property
+    def log_file_path(self):
+        return self.get_log_file_path()
+
