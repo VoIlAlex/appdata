@@ -1,4 +1,4 @@
-Getting started with AppData
+Getting started
 ===================================
 
 **AppData** is a Python library to access app data paths based
