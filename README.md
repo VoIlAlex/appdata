@@ -3,6 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/VoIlAlex/appdata/badge.svg?branch=master&)](https://coveralls.io/github/VoIlAlex/appdata?branch=master)
 [![PyPI release](https://img.shields.io/pypi/v/appdata)](https://pypi.org/project/appdata/)
 ![Build status](https://github.com/VoIlAlex/appdata/actions/workflows/publish-to-pypi.yml/badge.svg)
+[![Documentation](https://img.shields.io/readthedocs/appdata)](https://appdata.readthedocs.io/en/latest/)
 
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/b909411d678ef3500d92/maintainability)](https://codeclimate.com/github/VoIlAlex/appdata/maintainability)
