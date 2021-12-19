@@ -1,7 +1,5 @@
 # appdata | Application Data Management
 
-[![Coverage Status](https://coveralls.io/repos/github/VoIlAlex/appdata/badge.svg?branch=master)](https://coveralls.io/github/VoIlAlex/appdata?branch=master)
-
 ## Installation
 
 ```bash
