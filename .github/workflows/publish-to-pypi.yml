@@ -31,7 +31,7 @@ jobs:
       - name: Coveralls
         run: >-
           export pip install coveralls &&
-          coverage run --source=mypkg -m pytest tests/ &&
+          coverage run --source=appdata -m pytest tests/ &&
           coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
