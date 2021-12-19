@@ -32,10 +32,12 @@ jobs:
           --wheel
           --outdir dist/
       - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: coverage.xml
+        run: >-
+          export pip install coveralls &&
+          coverage run --source=mypkg -m pytest tests/ &&
+          coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish distribution 📦 to PyPI
         if: startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
