@@ -18,6 +18,10 @@ jobs:
           pip install
           build
           --user
+      - name: Test with pytest
+        run: |
+          pip install pytest pytest-cov
+          python -m pytest --cov=./appdata --cov-report xml
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
