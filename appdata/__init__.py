@@ -1,10 +1,6 @@
-import configparser
 import os
 import shutil
 import sys
-from functools import cache
-
-from loguru import logger
 
 from appdata.utils import get_home_folder, prepare_ext
 
