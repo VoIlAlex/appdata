@@ -241,6 +241,15 @@ class TestPathsUtils:
         assert not app_paths.check_for_exceptions(raise_exceptions=False)
         app_paths.clear(everything=True)
 
+    def test_check_for_exceptions_8(self):
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.setup()
+        shutil.rmtree(app_paths.locks_path)
+        assert not app_paths.check_for_exceptions(raise_exceptions=False)
+        app_paths.clear(everything=True)
+
     def test_setup_1(self):
         app_paths = AppDataPaths(
             home_folder_path=os.getcwd()
@@ -263,7 +272,6 @@ class TestPathsUtils:
         assert os.path.exists(lock_path)
         app_paths.setup(override=True)
         assert not os.path.exists(lock_path)
-
 
     def test_clear_1(self):
         """

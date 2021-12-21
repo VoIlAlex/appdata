@@ -86,6 +86,8 @@ class AppDataPaths:
                 raise RuntimeError('Logs folder should exist. Run setup(...) to initialize the required files.')
             if not os.path.exists(self.log_file_path):
                 raise RuntimeError('Default log file should exist. Run setup(...) to initialize the required files.')
+            if not os.path.exists(self.locks_path):
+                raise RuntimeError('Locks folder should exist. Run setup(...) to initialize the required files.')
         except Exception as e:
             if raise_exceptions:
                 raise
@@ -148,7 +150,8 @@ class AppDataPaths:
         return not os.path.exists(self.app_data_path) \
                 or not os.path.exists(self.config_path) \
                 or not os.path.exists(self.logs_path) \
-                or not os.path.exists(self.log_file_path)
+                or not os.path.exists(self.log_file_path) \
+                or not os.path.exists(self.locks_path)
 
     @property
     def app_data_path(self):
