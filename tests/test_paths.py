@@ -251,6 +251,20 @@ class TestPathsUtils:
         assert app_paths.require_setup is False
         app_paths.clear(everything=True)
 
+    def test_setup_2(self):
+        app_paths = AppDataPaths(
+            home_folder_path=os.getcwd()
+        )
+        app_paths.setup(override=True)
+        assert os.path.exists(app_paths.locks_path)
+        lock_path = app_paths.get_lock_file_path('some_lock')
+        with open(lock_path, 'w+') as f:
+            pass
+        assert os.path.exists(lock_path)
+        app_paths.setup(override=True)
+        assert not os.path.exists(lock_path)
+
+
     def test_clear_1(self):
         """
         Simple clear clears only default generated files.

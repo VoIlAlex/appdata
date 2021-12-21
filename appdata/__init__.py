@@ -2,18 +2,21 @@ import os
 import shutil
 import sys
 
+from appdata.lock import FileBasedLock
 from appdata.utils import get_home_folder, prepare_ext
 
 
 class AppDataPaths:
     DEFAULT_EXT = '.ini'
     DEFAULT_LOG_FILE_NAME = 'app'
+    DEFAULT_LOCK_FILE_NAME = 'lock'
 
     def __init__(
             self,
             name=None,
             default_confing_ext=None,
             logs_folder_name='logs',
+            locks_folder_name='locks',
             home_folder_path=None,
     ):
         """
@@ -23,6 +26,7 @@ class AppDataPaths:
         self.default_confing_ext = default_confing_ext
         self.home_folder_path = home_folder_path or get_home_folder()
         self.logs_folder_name = logs_folder_name
+        self.locks_folder_name = locks_folder_name
 
         assert self.name
         assert self.home_folder_path
@@ -62,6 +66,16 @@ class AppDataPaths:
         path = os.path.join(self.logs_path, name + '.log')
         return path
 
+    def get_lock_file_path(self, name=None):
+        if name:
+            name = name
+        elif self.name:
+            name = self.name
+        else:
+            name = self.DEFAULT_LOCK_FILE_NAME
+        path = os.path.join(self.locks_path, name + '.lock')
+        return path
+
     def check_for_exceptions(self, raise_exceptions=False):
         try:
             if not os.path.exists(self.app_data_path):
@@ -78,7 +92,9 @@ class AppDataPaths:
             return False
         return True
 
-    def setup(self):
+    def setup(self, override=False):
+        if override:
+            self.clear()
         app_data_path = self.app_data_path
         if not os.path.exists(app_data_path):
             os.makedirs(app_data_path)
@@ -97,6 +113,10 @@ class AppDataPaths:
             with open(log_file_path, 'w+'):
                 pass
 
+        locks_path = self.locks_path
+        if not os.path.exists(locks_path):
+            os.makedirs(locks_path)
+
     def clear(self, everything=False):
         if everything:
             app_data_path = self.app_data_path
@@ -112,6 +132,16 @@ class AppDataPaths:
             logs_path = self.logs_path
             if os.path.exists(logs_path):
                 shutil.rmtree(logs_path)
+
+            locks_path = self.locks_path
+            if os.path.exists(locks_path):
+                if not os.path.isdir(locks_path):
+                    os.remove(locks_path)
+                else:
+                    for file in os.listdir(locks_path):
+                        os.remove(
+                            os.path.join(locks_path, file)
+                        )
 
     @property
     def require_setup(self) -> bool:
@@ -142,6 +172,17 @@ class AppDataPaths:
             return self.app_data_path
 
     @property
+    def locks_path(self):
+        if self.locks_folder_name:
+            return os.path.join(self.app_data_path, self.locks_folder_name)
+        else:
+            return self.app_data_path
+
+    @property
+    def lock_file_path(self):
+        return self.get_lock_file_path()
+
+    @property
     def config_path(self):
         """
         Allows to get default app config path.
@@ -156,3 +197,6 @@ class AppDataPaths:
     @property
     def default_name(self):
         return os.path.split(os.getcwd())[1]
+
+    def lock(self):
+        return FileBasedLock(self)
