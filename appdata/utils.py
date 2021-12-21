@@ -1,14 +1,14 @@
-from functools import cache
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
 
-@cache
+@lru_cache
 def get_home_folder():
     return Path.home().absolute()
 
 
-@cache
+@lru_cache
 def prepare_ext(ext: Optional[str]):
     if ext and len(ext) != 0:
         while ext.startswith('..'):
