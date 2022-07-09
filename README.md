@@ -39,7 +39,7 @@ app_paths = AppDataPaths('myapp')  # Name is optional. By default CWD folder nam
 To create the application folder tree:
 
 ```python
-paths.setup()
+app_paths.setup()
 ```
 
 There are few paths specified to manage your application data folder:
