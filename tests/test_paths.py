@@ -18,7 +18,7 @@ class TestPaths:
     def test_require_setup_1(self):
         app_paths = AppDataPaths(
             name='some_app',
-            default_confing_ext='.conf',
+            default_config_ext='.conf',
             home_folder_path=os.getcwd()
         )
         require_setup = not os.path.exists(app_paths.home_folder_path) \
@@ -36,7 +36,7 @@ class TestConfigPaths:
         )
 
     def test_config_path_2(self):
-        app_paths = AppDataPaths(default_confing_ext='.conf')
+        app_paths = AppDataPaths(default_config_ext='.conf')
         assert app_paths.config_path == os.path.join(
             Path.home(),
             '.appdata',
@@ -46,7 +46,7 @@ class TestConfigPaths:
     def test_config_path_3(self):
         app_paths = AppDataPaths(
             name='some_app',
-            default_confing_ext='.conf'
+            default_config_ext='.conf'
         )
         assert app_paths.config_path == os.path.join(
             Path.home(),
@@ -58,7 +58,7 @@ class TestConfigPaths:
         home_folder_path = os.getcwd()
         app_paths = AppDataPaths(
             name='some_app',
-            default_confing_ext='.conf',
+            default_config_ext='.conf',
             home_folder_path=home_folder_path
         )
         assert app_paths.config_path == os.path.join(
@@ -70,7 +70,7 @@ class TestConfigPaths:
     def test_config_path_5(self):
         app_paths = AppDataPaths(
             name='some_app',
-            default_confing_ext='.conf'
+            default_config_ext='.conf'
         )
         config_path = app_paths.get_config_path(
             name='some_config',
@@ -85,7 +85,7 @@ class TestConfigPaths:
     def test_config_path_6(self):
         app_paths = AppDataPaths(
             name='some_app',
-            default_confing_ext='.conf'
+            default_config_ext='.conf'
         )
         config_path = app_paths.get_config_path(
             name='some_config',
@@ -100,7 +100,7 @@ class TestConfigPaths:
     def test_config_path_7(self):
         app_paths = AppDataPaths(
             name='some_app',
-            default_confing_ext=None
+            default_config_ext=None
         )
         config_path = app_paths.get_config_path(
             name='',
@@ -115,7 +115,7 @@ class TestConfigPaths:
     def test_config_path_8(self):
         app_paths = AppDataPaths(
             name='some_app',
-            default_confing_ext=None
+            default_config_ext=None
         )
         config_path = app_paths.get_config_path(
             name='',
