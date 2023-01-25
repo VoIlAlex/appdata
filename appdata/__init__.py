@@ -14,7 +14,7 @@ class AppDataPaths:
     def __init__(
             self,
             name=None,
-            default_confing_ext=None,
+            default_config_ext=None,
             logs_folder_name='logs',
             locks_folder_name='locks',
             home_folder_path=None,
@@ -23,7 +23,7 @@ class AppDataPaths:
         :param name: name of the project. Uses cwd name as default.
         """
         self.name = name if name else os.path.split(os.getcwd())[1]
-        self.default_confing_ext = default_confing_ext
+        self.default_config_ext = default_config_ext
         self.home_folder_path = home_folder_path or get_home_folder()
         self.logs_folder_name = logs_folder_name
         self.locks_folder_name = locks_folder_name
@@ -37,8 +37,8 @@ class AppDataPaths:
         :param name: name of the application. Uses app name as default.
         :return: path to the config.
         """
-        ext = ext if ext is not None else self.default_confing_ext \
-            if self.default_confing_ext is not None else self.DEFAULT_EXT
+        ext = ext if ext is not None else self.default_config_ext \
+            if self.default_config_ext is not None else self.DEFAULT_EXT
 
         # Not empty extension should start with . (dot)
         ext = prepare_ext(ext)
@@ -148,10 +148,10 @@ class AppDataPaths:
     @property
     def require_setup(self) -> bool:
         return not os.path.exists(self.app_data_path) \
-                or not os.path.exists(self.config_path) \
-                or not os.path.exists(self.logs_path) \
-                or not os.path.exists(self.log_file_path) \
-                or not os.path.exists(self.locks_path)
+               or not os.path.exists(self.config_path) \
+               or not os.path.exists(self.logs_path) \
+               or not os.path.exists(self.log_file_path) \
+               or not os.path.exists(self.locks_path)
 
     @property
     def app_data_path(self):
