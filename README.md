@@ -46,10 +46,10 @@ There are few paths specified to manage your application data folder:
 
 ```python
 print(app_paths.name)  # myapp
-print(app_paths.app_data_path)  # (for Linux) /home/<user>/.myapp
-print(app_paths.logs_path)  # (for Linux) /home/<user>/.myapp/logs
-print(app_paths.config_path)  # (for Linux) /home/<user>/.myapp/default.ini
-print(app_paths.log_file_path)  # (for Linux) /home/<user>/.myapp/logs/myapp.log
+print(app_paths.app_data_path)  # (for Linux and MacOS) /home/<user>/.myapp
+print(app_paths.logs_path)  # (for Linux and MacOS) /home/<user>/.myapp/logs
+print(app_paths.config_path)  # (for Linux and MacOS) /home/<user>/.myapp/default.ini
+print(app_paths.log_file_path)  # (for Linux and MacOS) /home/<user>/.myapp/logs/myapp.log
 ```
 
 Every path could be customized. See options [here](https://appdata.readthedocs.io/).

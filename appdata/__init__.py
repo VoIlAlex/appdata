@@ -160,7 +160,7 @@ class AppDataPaths:
         else:
             name = self.name
 
-        if sys.platform == 'linux':
+        if sys.platform == 'linux' or sys.platform == 'darwin':
             app_data_folder_name = f'.{name}'
         else:
             app_data_folder_name = name
