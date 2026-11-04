@@ -1,20 +1,16 @@
-# appdata | Application Data Management
+# appdata
 
-[![Coverage Status](https://coveralls.io/repos/github/VoIlAlex/appdata/badge.svg?branch=master&)](https://coveralls.io/github/VoIlAlex/appdata?branch=master)
-[![PyPI release](https://img.shields.io/pypi/v/appdata)](https://pypi.org/project/appdata/)
-![Build status](https://github.com/VoIlAlex/appdata/actions/workflows/publish-to-pypi.yml/badge.svg)
+[![PyPI](https://img.shields.io/pypi/v/appdata)](https://pypi.org/project/appdata/)
+[![Python versions](https://img.shields.io/pypi/pyversions/appdata)](https://pypi.org/project/appdata/)
+[![CI](https://github.com/VoIlAlex/appdata/actions/workflows/ci.yml/badge.svg)](https://github.com/VoIlAlex/appdata/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/VoIlAlex/appdata/badge.svg?branch=master)](https://coveralls.io/github/VoIlAlex/appdata?branch=master)
 [![Documentation](https://img.shields.io/readthedocs/appdata)](https://appdata.readthedocs.io/en/latest/)
-
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/b909411d678ef3500d92/maintainability)](https://codeclimate.com/github/VoIlAlex/appdata/maintainability)
-[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![License](https://img.shields.io/github/license/VoIlAlex/appdata)](https://github.com/VoIlAlex/appdata/blob/master/LICENSE.md)
-[![Downloads](https://static.pepy.tech/personalized-badge/appdata?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)](https://pepy.tech/project/appdata)
+[![Downloads](https://static.pepy.tech/badge/appdata)](https://pepy.tech/project/appdata)
 
-
-[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
-[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)
-[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
+**appdata** is a small, dependency-free, fully typed library to manage the data folder of
+your application — config files, log files and cross-process file locks — on Linux, macOS
+and Windows.
 
 ## Installation
 
@@ -22,41 +18,48 @@
 pip install appdata
 ```
 
-## Documentation
-
-The detailed documentation you can find on [appdata.readthedocs.io](https://appdata.readthedocs.io/en/latest/index.html).
+Requires Python 3.9+.
 
 ## Usage
-
-To manage paths of application data folder there is `AppDataPaths` class:
 
 ```python
 from appdata import AppDataPaths
 
-app_paths = AppDataPaths('myapp')  # Name is optional. By default CWD folder name is used.
+app_paths = AppDataPaths("myapp")  # Name is optional; defaults to the CWD folder name.
+app_paths.setup()                  # Creates missing files and folders, never overwrites.
 ```
-
-To create the application folder tree:
 
 ```python
-app_paths.setup()
+app_paths.app_data_path  # ~/.myapp               (%USERPROFILE%\myapp on Windows)
+app_paths.config_path    # ~/.myapp/default.ini
+app_paths.logs_path      # ~/.myapp/logs
+app_paths.log_file_path  # ~/.myapp/logs/myapp.log
+app_paths.locks_path     # ~/.myapp/locks
+
+app_paths.get_config_path(name="secrets", ext=".json", create=True)
+app_paths.get_log_file_path(name="worker")
 ```
 
-There are few paths specified to manage your application data folder:
+Allow only one process at a time into a critical section:
 
 ```python
-print(app_paths.name)  # myapp
-print(app_paths.app_data_path)  # (for Linux and MacOS) /home/<user>/.myapp
-print(app_paths.logs_path)  # (for Linux and MacOS) /home/<user>/.myapp/logs
-print(app_paths.config_path)  # (for Linux and MacOS) /home/<user>/.myapp/default.ini
-print(app_paths.log_file_path)  # (for Linux and MacOS) /home/<user>/.myapp/logs/myapp.log
+with app_paths.lock(timeout=10):  # raises appdata.LockTimeoutError on timeout
+    ...
 ```
 
-Every path could be customized. See options [here](https://appdata.readthedocs.io/).
+Clean up:
+
+```python
+app_paths.clear()                 # default config, logs and lock files
+app_paths.clear(everything=True)  # the whole app data folder
+```
+
+Every name and location can be customized; see the
+[documentation](https://appdata.readthedocs.io/).
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

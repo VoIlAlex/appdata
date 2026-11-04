@@ -1,12 +1,13 @@
-Welcome to AppData documentation!
-===================================
+appdata
+=======
 
-**AppData** is a Python library to access app data paths based
-on the operating system the app is running on.
-
-Contents
---------
+**appdata** is a small, dependency-free Python library to manage the data
+folder of an application: config files, log files and file-based locks,
+located consistently across Linux, macOS and Windows.
 
 .. toctree::
+   :maxdepth: 2
 
    getting_started
+   api
+   changelog

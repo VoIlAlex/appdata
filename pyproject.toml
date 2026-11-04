@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "appdata"
+dynamic = ["version"]
+description = "Utils to manage application data folder: config, logs and lock paths."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE.md"]
+authors = [{ name = "Ilya Vouk", email = "ilya.vouk@gmail.com" }]
+maintainers = [{ name = "Ilya Vouk", email = "ilya.vouk@gmail.com" }]
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["appdata", "utils", "filesystem", "paths", "config", "logs", "lock"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Filesystems",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/VoIlAlex/appdata"
+Documentation = "https://appdata.readthedocs.io/"
+Source = "https://github.com/VoIlAlex/appdata"
+Issues = "https://github.com/VoIlAlex/appdata/issues"
+Changelog = "https://github.com/VoIlAlex/appdata/blob/master/CHANGELOG.md"
+
+[dependency-groups]
+test = ["pytest>=8", "pytest-cov>=5"]
+lint = ["ruff>=0.14", "mypy>=1.13", "pytest>=8"]
+docs = ["sphinx>=7", "furo>=2024.8.6"]
+dev = [
+    { include-group = "test" },
+    { include-group = "lint" },
+    { include-group = "docs" },
+    "build>=1.2",
+    "twine>=6",
+    "pre-commit>=4",
+]
+
+[tool.setuptools]
+packages = ["appdata"]
+
+[tool.setuptools.dynamic]
+version = { attr = "appdata.__version__" }
+
+[tool.setuptools.package-data]
+appdata = ["py.typed"]
+
+# ---------------------------------------------------------------- pytest
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["appdata", "tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config", "--doctest-modules", "--import-mode=importlib"]
+xfail_strict = true
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+source = ["appdata"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:"]
+
+# ---------------------------------------------------------------- linting
+
+[tool.ruff]
+line-length = 110
+target-version = "py39"
+
+[tool.ruff.format]
+exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "PT", "PL", "C4", "PIE", "RET", "TC"]
+ignore = ["PLR2004", "PLR0913"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["appdata"]
+
+[tool.mypy]
+strict = true
+files = ["appdata", "tests"]
