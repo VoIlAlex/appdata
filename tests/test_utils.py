@@ -1,29 +1,33 @@
+from __future__ import annotations
+
 from pathlib import Path
+
+import pytest
 
 from appdata import get_home_folder, prepare_ext
 
 
-class TestUtils:
-    def test_home_path(self):
-        assert get_home_folder() == Path.home()
+def test_home_folder() -> None:
+    assert get_home_folder() == Path.home().absolute()
 
-    def test_ext_preparation_1(self):
-        assert prepare_ext('.ext') == '.ext'
 
-    def test_ext_preparation_2(self):
-        assert prepare_ext('ext') == '.ext'
+def test_home_folder_follows_environment(home: Path) -> None:
+    assert get_home_folder() == home
 
-    def test_ext_preparation_3(self):
-        assert prepare_ext('') == ''
 
-    def test_ext_preparation_4(self):
-        assert prepare_ext('.') == ''
-
-    def test_ext_preparation_5(self):
-        assert prepare_ext('..') == ''
-
-    def test_ext_preparation_6(self):
-        assert prepare_ext('...') == ''
-
-    def test_ext_preparation_7(self):
-        assert prepare_ext(None) == ''
+@pytest.mark.parametrize(
+    ("ext", "expected"),
+    [
+        (".ext", ".ext"),
+        ("ext", ".ext"),
+        ("..ext", ".ext"),
+        ("tar.gz", ".tar.gz"),
+        ("", ""),
+        (".", ""),
+        ("..", ""),
+        ("...", ""),
+        (None, ""),
+    ],
+)
+def test_prepare_ext(ext: str | None, expected: str) -> None:
+    assert prepare_ext(ext) == expected

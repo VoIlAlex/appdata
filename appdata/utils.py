@@ -1,22 +1,33 @@
-from functools import lru_cache
+"""Small helpers used by :mod:`appdata`."""
+
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Optional
+
+__all__ = ["get_home_folder", "prepare_ext"]
 
 
-@lru_cache()
-def get_home_folder():
+def get_home_folder() -> Path:
+    """Return the absolute path of the current user's home directory."""
     return Path.home().absolute()
 
 
-@lru_cache()
-def prepare_ext(ext: Optional[str]):
-    if ext and len(ext) != 0:
-        while ext.startswith('..'):
-            ext = ext[1:]
-        if len(ext) == 1 and ext[0] == '.':
-            ext = ''
+def prepare_ext(ext: str | None) -> str:
+    """Normalize a file extension.
 
-        if len(ext) != 0:
-            if ext[0] != '.':
-                ext = '.' + ext
-    return ext or ''
+    The result is either an empty string or a string that starts with exactly
+    one dot::
+
+        >>> prepare_ext("ini")
+        '.ini'
+        >>> prepare_ext("..ini")
+        '.ini'
+        >>> prepare_ext(".")
+        ''
+        >>> prepare_ext(None)
+        ''
+    """
+    if not ext:
+        return ""
+    ext = "." + ext.lstrip(".")
+    return "" if ext == "." else ext
